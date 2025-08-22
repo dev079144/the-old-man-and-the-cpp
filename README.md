@@ -2,4 +2,4 @@
 Decoder-only transformer text generator built from scratch with Python and C++, trained on Hemingway's literature.
 
 ## TODO
-* Consider normalizing symbols ” and ’ -> " and ' in corpus
+* Consider normalizing symbols ” and ’ to " and ' in corpus
