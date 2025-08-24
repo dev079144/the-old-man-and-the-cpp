@@ -7,7 +7,7 @@ import numpy as np
 # import unicodedata
 
 # Process raw data corpus
-def process_data(input_path = "./data/hemingway.txt", output_path = "./data/hemingway_processed.txt"):
+def clean(input_path = "../data/raw_corpus.txt", output_path = "../data/clean_corpus.txt"):
     with open(input_path, "r", encoding="utf-8") as f_in:
         data = f_in.read()
 
@@ -22,7 +22,7 @@ def process_data(input_path = "./data/hemingway.txt", output_path = "./data/hemi
         f_out.write(data)
 
 # BPE Tokenizer
-def tokenize(dataset, vocab_size, vocabulary_output_path='../data/vocabulary.json', corpus_output_path='../data/tokenized_corpus_ids.npy'):
+def tokenize(dataset, vocab_size, vocabulary_output_path='../data/vocabulary0.json', corpus_output_path='../data/tokenized_corpus_ids0.npy'):
     # Tokenize
 
     # Process dataset
