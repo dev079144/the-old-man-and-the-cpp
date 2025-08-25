@@ -1,17 +1,19 @@
 import json
 import regex as re
 import numpy as np
+from config import vocab_size, context_size, embedding_dim
 
-# Needed for alternative cleaning and processing approaches
+# Needed for alternative data cleaning approach
 # import unicodedata
-# import re
+
+# TODO: Consider normalizing symbols ” and ’ to " and ' in corpus
 
 # Clean raw data corpus
 def clean(input_path = "../data/raw_corpus.txt", output_path = "../data/clean_corpus.txt"):
     with open(input_path, "r", encoding="utf-8") as f_in:
         data = f_in.read()
 
-    # ?
+    # Alternative data cleaning method
     # data = unicodedata.normalize("NFKC", data)
     # data = ''.join(c for c in data if not unicodedata.category(c).startswith('C'))
 
@@ -22,7 +24,7 @@ def clean(input_path = "../data/raw_corpus.txt", output_path = "../data/clean_co
         f_out.write(data)
 
 # BPE Tokenizer
-def tokenize(dataset, vocabulary_size, vocabulary_output_path='../data/vocabulary0.json', corpus_output_path='../data/tokenized_corpus_ids0.npy'):
+def tokenize(dataset, vocabulary_output_path='../data/vocabulary0.json', corpus_output_path='../data/tokenized_corpus_ids0.npy'):
     # Tokenize
 
     # Process dataset
@@ -33,25 +35,12 @@ def tokenize(dataset, vocabulary_size, vocabulary_output_path='../data/vocabular
 
     tokens = [list(pt) for pt in processed_tokens]
 
-    # Alterative processing method
-    # raw_tokens = re.findall(r'\w+|[^\w\s]', dataset)
-
-    # processed_tokens = [raw_tokens[0]]
-
-    # for raw_token in raw_tokens[1:]:
-    #     if raw_token.isalnum():
-    #         processed_tokens.append('Ġ' + raw_token)
-    #     else:
-    #         processed_tokens.append(raw_token)
-
-    # tokens = [list(pt) for pt in processed_tokens]
-
     # TODO: Verify further that processing is working as intended
     # print(tokens[:1000])
 
     new_tokens = []
 
-    while len(vocab) < vocabulary_size:
+    while len(vocab) < vocab_size:
         # Rank pairs
         pairs = {}
 
@@ -66,7 +55,7 @@ def tokenize(dataset, vocabulary_size, vocabulary_output_path='../data/vocabular
     
         new_tokens = list(tokens)
         for ranked_pair in ranked_pairs:
-            if ranked_pair[1] > freq_thresh and len(vocab) < vocabulary_size:
+            if ranked_pair[1] > freq_thresh and len(vocab) < vocab_size:
                 pair = list(ranked_pair[0])
                 merged_token = ''.join(pair)
                 for idx, token in enumerate(tokens):
@@ -93,13 +82,22 @@ def tokenize(dataset, vocabulary_size, vocabulary_output_path='../data/vocabular
     return new_tokens, vocab
 
 # Sinusoidal positional encoder
-def sinusoidal_matrix(max_position, embedding_dimension):
-    pe = np.zeros((max_position, embedding_dimension))
-    position = np.arange(max_position).reshape(-1, 1)
+def build_pe():
+    pe = np.zeros((context_size, embedding_dim))
+    position = np.arange(context_size).reshape(-1, 1)
 
+    division_term = np.exp(-np.log(10000) * np.arange(0, embedding_dim, 2) / embedding_dim)
+
+    pe[:, 0::2] = np.sin(position * division_term)
+    pe[:, 1::2] = np.cos(position * division_term)
+
+    return pe
+
+positional_encoding_matrix = build_pe()
 
 def encode_position(embeddings):
-    pass
+    # Broadcast and add to input embeddings
+    return embeddings + positional_encoding_matrix[:context_size]
 
 
 # TODO: Learn more about how sinusoidal positional encoding works (https://medium.com/@pranay.janupalli/understanding-sinusoidal-positional-encoding-in-transformers-26c4c161b7cc)

@@ -8,7 +8,9 @@ embedding_dim = 256  # Vector dimension for token embeddings (d_model)
 feedforward_dim = 1024  # Matrix dimension for feedforward layers
 n_layers = 6  # Number of transformer blocks (should be within range 4-8)
 n_heads = 8  # Number of attention heads (can be reduced to 4)
+# head_dim = embedding_dim / n_heads (?)
 
+# Attention mechanism: Masked multi-head self-attention
 # Loss function: Cross-entropy
 # Positional encodings: Sinusoidal
 
