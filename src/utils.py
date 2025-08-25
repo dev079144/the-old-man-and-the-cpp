@@ -2,11 +2,11 @@ import json
 import regex as re
 import numpy as np
 
-# Needed for alternative processing approach
-# import re
+# Needed for alternative cleaning and processing approaches
 # import unicodedata
+# import re
 
-# Process raw data corpus
+# Clean raw data corpus
 def clean(input_path = "../data/raw_corpus.txt", output_path = "../data/clean_corpus.txt"):
     with open(input_path, "r", encoding="utf-8") as f_in:
         data = f_in.read()
@@ -22,7 +22,7 @@ def clean(input_path = "../data/raw_corpus.txt", output_path = "../data/clean_co
         f_out.write(data)
 
 # BPE Tokenizer
-def tokenize(dataset, vocab_size, vocabulary_output_path='../data/vocabulary0.json', corpus_output_path='../data/tokenized_corpus_ids0.npy'):
+def tokenize(dataset, vocabulary_size, vocabulary_output_path='../data/vocabulary0.json', corpus_output_path='../data/tokenized_corpus_ids0.npy'):
     # Tokenize
 
     # Process dataset
@@ -51,7 +51,7 @@ def tokenize(dataset, vocab_size, vocabulary_output_path='../data/vocabulary0.js
 
     new_tokens = []
 
-    while len(vocab) < vocab_size:
+    while len(vocab) < vocabulary_size:
         # Rank pairs
         pairs = {}
 
@@ -66,7 +66,7 @@ def tokenize(dataset, vocab_size, vocabulary_output_path='../data/vocabulary0.js
     
         new_tokens = list(tokens)
         for ranked_pair in ranked_pairs:
-            if ranked_pair[1] > freq_thresh and len(vocab) < vocab_size:
+            if ranked_pair[1] > freq_thresh and len(vocab) < vocabulary_size:
                 pair = list(ranked_pair[0])
                 merged_token = ''.join(pair)
                 for idx, token in enumerate(tokens):
@@ -92,3 +92,10 @@ def tokenize(dataset, vocab_size, vocabulary_output_path='../data/vocabulary0.js
 
     return new_tokens, vocab
 
+# Sinusoidal positional encoder
+def encode_position():
+    pass
+
+
+# TODO: Learn more about how sinusoidal positional encoding works (https://medium.com/@pranay.janupalli/understanding-sinusoidal-positional-encoding-in-transformers-26c4c161b7cc)
+# TODO: Consider refactoring the functions for positional encoding, and tokenization to make them refer to the methods they're using
