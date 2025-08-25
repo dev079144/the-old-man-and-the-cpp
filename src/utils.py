@@ -93,7 +93,12 @@ def tokenize(dataset, vocabulary_size, vocabulary_output_path='../data/vocabular
     return new_tokens, vocab
 
 # Sinusoidal positional encoder
-def encode_position():
+def sinusoidal_matrix(max_position, embedding_dimension):
+    pe = np.zeros((max_position, embedding_dimension))
+    position = np.arange(max_position).reshape(-1, 1)
+
+
+def encode_position(embeddings):
     pass
 
 
