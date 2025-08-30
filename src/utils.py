@@ -1,7 +1,7 @@
 import json
 import regex as re
 import numpy as np
-from config import vocab_size, context_size, embedding_dim
+from config import vocab_size, seq_len, d_model
 
 # Needed for alternative data cleaning approach
 # import unicodedata
@@ -86,10 +86,10 @@ def tokenize(dataset, vocabulary_output_path='../data/vocabulary0.json', corpus_
 
 # Sinusoidal positional encoder
 def build_pe():
-    pe = np.zeros((context_size, embedding_dim))
-    position = np.arange(context_size).reshape(-1, 1)
+    pe = np.zeros((seq_len, d_model))
+    position = np.arange(seq_len).reshape(-1, 1)
 
-    division_term = np.exp(-np.log(10000) * np.arange(0, embedding_dim, 2) / embedding_dim)
+    division_term = np.exp(-np.log(10000) * np.arange(0, d_model, 2) / d_model)
 
     pe[:, 0::2] = np.sin(position * division_term)
     pe[:, 1::2] = np.cos(position * division_term)
@@ -100,7 +100,7 @@ positional_encoding_matrix = build_pe()
 
 def encode_position(embeddings):
     # Broadcast and add to input embeddings
-    return embeddings + positional_encoding_matrix[:context_size]
+    return embeddings + positional_encoding_matrix[:seq_len]
 
 
 # TODO: Learn more about how sinusoidal positional encoding works (https://medium.com/@pranay.janupalli/understanding-sinusoidal-positional-encoding-in-transformers-26c4c161b7cc)
