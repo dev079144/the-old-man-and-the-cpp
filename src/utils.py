@@ -104,4 +104,4 @@ def encode_position(embeddings):
 
 
 # TODO: Learn more about how sinusoidal positional encoding works (https://medium.com/@pranay.janupalli/understanding-sinusoidal-positional-encoding-in-transformers-26c4c161b7cc)
-# TODO: Consider refactoring the functions for positional encoding and tokenization to make them refer to the methods they're using (sinusoidal and BPE)232
+# TODO: Consider refactoring the functions for positional encoding and tokenization to make them refer to the methods they're using (sinusoidal and BPE)
